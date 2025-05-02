@@ -15,8 +15,7 @@ except (FileNotFoundError, pd.errors.ParserError) as e:
 df.columns = df.columns.str.strip()
 df["Número NIT"] = df["Número NIT"].str.replace(",", "").str.replace('"', "").str.strip()
 df = df[df["Número NIT"].str.isnumeric()]
-df["Número NIT"] = df["Número NIT"].astype(int)
-
+df["Número NIT"] = df["Número NIT"].astype(int
 
 class NodoHospital:
     def __init__(self, nit: int, razon_social: str, sede: str, municipio: str) -> None:
