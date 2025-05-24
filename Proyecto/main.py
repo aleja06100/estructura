@@ -1,4 +1,4 @@
-### src/grafo.py
+
 import networkx as nx
 import pandas as pd
 import os
@@ -8,23 +8,22 @@ def mostrar_grafo(G):
     """
     Muestra el grafo con los nodos y las aristas, incluyendo los pesos como etiquetas.
     """
-    pos = nx.spring_layout(G)  # Calcula la posición de los nodos
+    pos = nx.spring_layout(G) 
     plt.figure(figsize=(10, 8))
     
-    # Dibuja los nodos y las aristas
+    
     nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='gray', node_size=2000, font_size=10)
     
-    # Obtén los pesos de las aristas (atributo 'tiempo')
-    edge_labels = nx.get_edge_attributes(G, 'tiempo')  # Cambia 'tiempo' si el atributo tiene otro nombre
+ 
+    edge_labels = nx.get_edge_attributes(G, 'tiempo') 
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red', font_size=8)
     
-    # Título del grafo
+ 
     plt.title("Grafo de Tráfico con Tiempos de Viaje")
-    
-    # Crea el directorio output si no existe
+  
     os.makedirs("output", exist_ok=True)
     
-    # Guarda el grafo como una imagen
+ 
     plt.savefig("output/grafo.png")
     
 def construir_grafo(path_csv):
@@ -42,7 +41,7 @@ def construir_grafo(path_csv):
     return G
 
 
-### src/modelo_ml.py
+
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
@@ -71,7 +70,7 @@ def predecir_tiempos(G, modelo, dia_actual, hora_actual):
         data['peso'] = tiempo_estimado
 
 
-### src/rutas.py
+
 import networkx as nx
 
 def encontrar_ruta_optima(G, source, target):
@@ -81,7 +80,7 @@ def encontrar_ruta_optima(G, source, target):
         raise ValueError(f"No hay ruta entre {source} y {target}.")
 
 
-### src/visualizacion.py
+
 import folium
 import os
 
@@ -109,7 +108,7 @@ def mostrar_ruta_en_mapa(ruta, output_path="output/ruta_recomendada.html"):
     m.save(output_path)
 
 
-### main.py
+
 import sys
 import os
 import matplotlib.pyplot as plt
@@ -117,18 +116,18 @@ import networkx as nx
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 from src.grafo import construir_grafo, mostrar_grafo
 
-# Verifica que el archivo de datos exista
+
 data_path = "data/datos_trafico.csv"
 if not os.path.exists(data_path):
     raise FileNotFoundError(f"El archivo {data_path} no existe. Por favor, verifica la ruta.")
 
-# Construcción del grafo
+
 G = construir_grafo(data_path)
 
-# Mostrar el grafo
+
 mostrar_grafo(G)
 
-# Imprime las aristas del grafo para depuración
+
 print(G.edges(data=True))
 
 
