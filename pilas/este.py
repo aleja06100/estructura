@@ -1,43 +1,52 @@
-from typing import Optional, Tuple, List
-class Nodo:
-    def __init__(self, posicion, anterior=None):
-        self.posicion = posicion  # Tupla (x, y)
-        self.anterior = anterior  # Nodo anterior en el camino
+from typing import Any, Optional, List, Tuple
 
+class NodoPila:
+    def __init__(self, valor: Any, siguiente: Optional['NodoPila'] = None) -> None:
+        self.valor = valor
+        self.siguiente = siguiente
 
 class Pila:
-    def __init__(self):
-        self.elementos = []
+    def __init__(self) -> None:
+        self.tope: Optional[NodoPila] = None
 
-    def apilar(self, nodo):
-        self.elementos.append(nodo)
+    def apilar(self, valor: Any) -> None:
+        nuevo_nodo = NodoPila(valor, self.tope)
+        self.tope = nuevo_nodo
 
-    def desapilar(self):
-        return self.elementos.pop() if not self.esta_vacia() else None
+    def desapilar(self) -> Optional[Any]:
+        if self.esta_vacia():
+            return None
+        valor = self.tope.valor
+        self.tope = self.tope.siguiente
+        return valor
 
-    def esta_vacia(self):
-        return len(self.elementos) == 0
+    def esta_vacia(self) -> bool:
+        return self.tope is None
 
+class Nodo:
+    def __init__(self, posicion: Tuple[int, int], anterior: Optional['Nodo'] = None) -> None:
+        self.posicion = posicion
+        self.anterior = anterior
 
 class Laberinto:
-    def __init__(self, laberinto):
+    def __init__(self, laberinto: List[List[str]]) -> None:
         self.laberinto = laberinto
         self.filas = len(laberinto)
         self.columnas = len(laberinto[0])
         self.inicio = self.encontrar_inicio()
         self.pila = Pila()
 
-    def encontrar_inicio(self):
+    def encontrar_inicio(self) -> Optional[Tuple[int, int]]:
         for i in range(self.filas):
             for j in range(self.columnas):
                 if self.laberinto[i][j] == 'S':
                     return (i, j)
         return None
 
-    def es_valido(self, x, y):
+    def es_valido(self, x: int, y: int) -> bool:
         return 0 <= x < self.filas and 0 <= y < self.columnas and self.laberinto[x][y] in ('O', 'E')
 
-    def imprimir_camino(self, nodo):
+    def imprimir_camino(self, nodo: 'Nodo') -> None:
         camino = []
         while nodo:
             camino.append(nodo.posicion)
@@ -45,7 +54,7 @@ class Laberinto:
         camino.reverse()
         print("Camino recorrido:", camino)
 
-    def resolver(self):
+    def resolver(self) -> bool:
         if not self.inicio:
             print("No se encontró el punto de inicio.")
             return False
@@ -55,6 +64,8 @@ class Laberinto:
 
         while not self.pila.esta_vacia():
             nodo_actual = self.pila.desapilar()
+            if nodo_actual is None:
+                continue
             x, y = nodo_actual.posicion
 
             if self.laberinto[x][y] == 'E':
@@ -75,7 +86,7 @@ class Laberinto:
 
 
 # Prueba
-laberinto_matriz = [
+laberinto_matriz: List[List[str]] = [
     ['S', 'O', 'X', 'X', 'O'],
     ['X', 'O', 'O', 'X', 'O'],
     ['X', 'X', 'O', 'O', 'X'],
